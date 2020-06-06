@@ -1,0 +1,70 @@
+<html>
+
+<body>
+    <input type="text" name="nome" id="novoInput">
+    <button onClick="adicionar()">Adicionar</button>
+    <button id="btn" onclick="gerarQuadrado()">Olá</button>
+</body>
+<script type="text/javascript">
+    var btnCriar = document.getElementById("btn");
+    btnCriar.style.color = '#fff'
+    btnCriar.style.fontWeight = 'bold';
+    btnCriar.style.backgroundColor = '#424242';
+    btnCriar.style.border = 'solid #ddd';
+    btnCriar.style.width = '200px';
+    btnCriar.style.height = '40px';
+    btnCriar.style.marginLeft = '45%';
+
+    function gerarQuadrado() {
+        let boxElement = document.createElement("div");
+        boxElement.style.width = '180px';
+        boxElement.style.height = '180px';
+        boxElement.style.margin = '10px';
+        boxElement.style.backgroundColor = '#f00';
+        boxElement.classList.add('box');
+        boxElement.addEventListener("mouseover", function () { boxElement.style.backgroundColor = getRandomColor(this) });
+        document.body.appendChild(boxElement);
+    }
+
+    function getRandomColor() {
+        var letters = "0123456789ABCDEF";
+        var color = "#";
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function geraLista(lista) {
+        var ul = document.createElement("ul");
+        ul.classList.add("list")
+        ul.id = "idList"
+
+        lista.map(e => {
+            console.log(e);
+            var listaItem = document.createElement("li");
+            listaItem.textContent = e;
+            ul.appendChild(listaItem);
+        })
+        document.body.appendChild(ul);
+
+    }
+
+    var nomes = ["Diego", "Gabriel", "Lucas"];
+    geraLista(nomes)
+
+    function adicionar() {
+        var item = document.getElementById("novoInput");
+        if (item && item.value != "") {
+            var ul = document.getElementById("idList");
+            console.log(item.value);
+            var listaItem = document.createElement("li");
+            listaItem.textContent = item.value;
+            ul.appendChild(listaItem);
+            item.value = "";
+        }
+
+    }
+</script>
+
+</html>

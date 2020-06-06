@@ -1,0 +1,84 @@
+<html>
+
+<body>
+    <p id="carregando" style="visibility: hidden;">Carregando...</p>
+    <input type="text" name="user" id="user">
+    <button onclick="makeRequest()">Buscar</button>
+</body>
+<script type="text/javascript">
+
+    function geraLista(lista) {
+        var ul = document.getElementById("idList");
+        if(!ul){
+            ul = document.createElement("ul");
+            ul.classList.add("list");
+            ul.id = "idList";
+        } else {
+            ul.innerHTML = '';
+        }
+
+        lista.map(e => {
+            console.log(e);
+            var listaItem = document.createElement("li");
+            listaItem.textContent = e.name;
+            ul.appendChild(listaItem);
+        })
+        document.body.appendChild(ul);
+
+    }
+
+    function error(string) {
+        var p = document.getElementById("error") || document.createElement("p");
+        p.id = "error";
+        p.innerText = string;
+        document.body.appendChild(p);
+    }
+
+    function carregando(estado) {
+        var p = document.getElementById("carregando");
+        p.style.visibility = estado ? "visible" : "hidden"
+        document.body.appendChild(p);
+    }
+
+    function makeRequest() {
+        let user = document.getElementById("user").value;
+        var URL = "https://api.github.com/users/" + user + "/repos";
+        console.log("buscando por " + user);
+        console.log("buscando por " + URL);
+        new Promise(function (resolve, reject) {
+            var r = new XMLHttpRequest();
+            r.open("GET", URL);
+            r.send(null);
+            carregando(true);
+            r.onreadystatechange = function () {
+                if (r.readyState === 4) {
+                    if (r.status === 200) {
+                        console.log(r);
+                        resolve(JSON.parse(r.responseText));
+                    } else if (r.status === 404) {
+                        console.log(r);
+                        reject("usuario inexistente");
+                    } else {
+                        console.log(r);
+                        reject("erro");
+                    }
+                }
+            }
+        })
+            .then((response) => {
+                console.log(response);
+                response.forEach(element => {
+                    console.log(element.name);
+                });
+                carregando(false);
+                geraLista(response);
+            })
+            .catch((erro) => {
+                carregando(false);
+                console.log(erro);
+                error(erro);
+            })
+    }
+</script>
+
+</html>
